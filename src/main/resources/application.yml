@@ -1,0 +1,55 @@
+# database
+spring.datasource:
+    url: jdbc:mysql://localhost:3306/leo?useSSL=false
+    username: root
+    password: root
+    initialize: false
+    test-while-idle: true
+    validation-query: SELECT 1
+
+spring.jpa:
+    hibernate:
+        ddl-auto: none
+        database: mysql
+        show-sql: true
+
+# data-rest
+spring.data.rest.base-path: /data
+
+# web
+server:
+    session:
+        timeout: 1800
+    port: 8081
+    context-path: /
+
+# security
+security.user.name: admin
+security.user.password: 123456
+
+# log
+logging.level.root: INFO
+logging.level.com.onlymaker: DEBUG
+logging.path: /tmp/logs
+
+# default mail sender
+spring.mail:
+    host: smtp.exmail.qq.com
+    username: info@onlymaker.com
+    password: Sbcd123
+
+# cron: second minite hour date month week (year)
+task.crawl: "0 0 12,16 * * *"
+task.display: "0 0 5,23 * * *"
+
+# qiniu
+qiniu.access_key:
+qiniu.secret_key:
+qiniu.domain:
+qiniu.bucket:
+
+---
+# prod
+spring.profiles: prod
+spring.mail.host: hwsmtp.exmail.qq.com
+logging.path: /usr/bin/app/logs

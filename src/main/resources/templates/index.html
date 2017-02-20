@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title th:text="${title}">Title</title>
+  <link href="../static/bootstrap/bootstrap-3.3.7.min.css" th:href="@{/bootstrap/bootstrap-3.3.7.min.css}" rel="stylesheet"/>
+  <style>
+    .highlight {
+      background-color: pink;
+    }
+    .table tr:nth-of-type(1) {
+      color: blue;
+      cursor: pointer;
+    }
+    .filter {
+      margin: auto 3px;
+      color: gray;
+      font-size: 0.8em;
+      font-weight: 400;
+    }
+    .item {
+      cursor: pointer;
+    }
+    #update {
+      margin: auto 10px;
+    }
+    #create {
+      margin-right: 50px;
+    }
+    .search {
+      float: right;
+      color: black;
+    }
+    .search button {
+      margin-top: -2px;
+      margin-left: 10px;
+    }
+    img {
+      width: 50px
+    }
+  </style>
+  <script src="../static/js/jquery-3.1.1.min.js" th:src="@{/js/jquery-3.1.1.min.js}"></script>
+</head>
+<body>
+<div class="container">
+  <table class="table table-hover">
+    <tr class="active">
+      <td colspan="4">
+        <span id="all" th:if="${current == 'index'}">All</span>
+        <span id="update" th:if="${current == 'index'}">Updated</span>
+        <span id="create" th:if="${current == 'index'}">Create</span>
+        <span id="home" class="glyphicon glyphicon-home" th:if="${current != 'index'}"></span>
+        <span class="filter" th:each="store: ${stores}" th:text="${store}">Store</span>
+        <span class="search" th:if="${current == 'index'}">
+          <input type="text" name="asin" th:value="${asin}" placeholder="asin search" />
+          <button th:if="${#strings.isEmpty(asin)}" class="btn btn-xs btn-success">Go</button>
+        </span>
+      </td>
+    </tr>
+    <tr th:each="entry: ${entries}" data-th-data="${entry.status}" class="item">
+      <td th:text="${entry.asin}" data-th-data="${entry.id}">asin</td>
+      <td>
+        <img th:if="${#strings.contains(entry.thumb, 'http')}" th:src="${entry.thumb}"/>
+        <img th:if="${#strings.contains(entry.thumb, 'http') == false}" th:src="@{'/' + ${entry.thumb}}"/>
+      </td>
+      <td th:text="${entry.url}">url</td>
+      <td th:text="${entry.store}">store</td>
+    </tr>
+  </table>
+  <nav><ul class="pagination"></ul></nav>
+</div>
+<script src="../static/bootstrap/bootstrap-3.3.7.min.js" th:src="@{/bootstrap/bootstrap-3.3.7.min.js}"></script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  var current = /*[[@{${current}}]]*/ "index";
+  var pageNo = /*[[@{${pageNo}}]]*/ 1;
+  var pages = /*[[@{${pages}}]]*/ 1;
+
+  if(pages > 1) {
+    for(var i = 1; i <= pages; i++) {
+      if(pageNo != i) $("ul.pagination").append('<li data="' + i + '"><a>'+ i + '</a></li>');
+      else $("ul.pagination").append('<li data="' + i + '"><a style="color: black">'+ i + '</a></li>');
+    }
+  }
+
+  $("ul.pagination li").click(function() {
+    var page = $(this).attr("data");
+    if(pageNo != page) location.href = current + "?pageNo=" + page;
+  });
+
+  $("tr").each(function () {
+    var data = $(this).attr("data");
+    if(data == 1) $(this).addClass("highlight");
+  })
+
+  $("#all").click(function () {
+    location.href = /*[[@{/index}]]*/ "index";
+  })
+
+  $("#home").click(function () {
+    location.href = /*[[@{/index}]]*/ "index";
+  })
+
+  $("#update").click(function () {
+    location.href = "update";
+  })
+
+  $("#create").click(function () {
+    location.href = "create";
+  })
+
+  $(".filter").click(function () {
+    var store = $(this).text();
+    location.href = "store/" + store;
+  })
+
+  $(".item").click(function() {
+    var data = $(this).find("td:nth-of-type(1)").attr("data");
+    window.open("detail" + "?id=" + data);
+  });
+
+  $(".search button").click(function () {
+    var asin = $("input[name=asin]").val().trim()
+    location.href = "asin/" + asin
+  })
+  /*]]>*/
+</script>
+</body>
+</html>

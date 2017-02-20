@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title th:text="${title}">Title</title>
+  <link href="../static/bootstrap/bootstrap-3.3.7.min.css" th:href="@{/bootstrap/bootstrap-3.3.7.min.css}" rel="stylesheet"/>
+  <script src="../static/js/jquery-3.1.1.min.js" th:src="@{/js/jquery-3.1.1.min.js}"></script>
+</head>
+<body>
+<div class="container">
+  <div class="row" th:if="${status == 0}">
+    <form method="post" action="uploadFile" enctype="multipart/form-data">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="form-group">
+          <label>选择文件</label>
+          <p class="help-block">请选择 excel 文件</p>
+          <input type="file" class="form-control" name="file"/>
+        </div>
+        <div class="btn btn-group">
+          <div class="btn btn-primary">确定</div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="row" th:if="${status == 1}">上传成功</div>
+  <div class="row" th:if="${status == 2}">上传失败</div>
+</div>
+<script src="../static/bootstrap/bootstrap-3.3.7.min.js" th:src="@{/bootstrap/bootstrap-3.3.7.min.js}"></script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  $(".btn-primary").click(function () {
+    $("form").submit();
+  })
+  /*]]>*/
+</script>
+</body>
+</html>

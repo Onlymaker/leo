@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title th:text="${title}">Title</title>
+  <link href="../static/bootstrap/bootstrap-3.3.7.min.css" th:href="@{/bootstrap/bootstrap-3.3.7.min.css}" rel="stylesheet"/>
+  <style>
+    .float-right{float: right}
+  </style>
+  <script src="../static/js/jquery-3.1.1.min.js" th:src="@{/js/jquery-3.1.1.min.js}"></script>
+</head>
+<body>
+<div class="container">
+  <table class="table table-hover">
+    <tr class="active">
+      <td colspan="3">
+        <div class="btn-group float-right">
+          <button class="btn btn-primary export">全部导出</button>
+          <button class="btn btn-danger delete">全部删除</button>
+        </div>
+      </td>
+    </tr>
+    <tr th:each="result: ${results}" class="item" data-th-data="${result.id}">
+      <td th:text="${result.orderId}">orderId</td>
+      <td th:text="${result.customerId}">customerId</td>
+      <td th:text="${result.asin}">asin</td>
+    </tr>
+  </table>
+  <nav><ul class="pagination"></ul></nav>
+</div>
+<script src="../static/bootstrap/bootstrap-3.3.7.min.js" th:src="@{/bootstrap/bootstrap-3.3.7.min.js}"></script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  var pageNo = /*[[@{${pageNo}}]]*/ 1;
+  var pages = /*[[@{${pages}}]]*/ 1;
+
+  if(pages > 1) {
+    for(var i = 1; i <= pages; i++) {
+      if(pageNo != i) $("ul.pagination").append('<li data="' + i + '"><a>'+ i + '</a></li>');
+      else $("ul.pagination").append('<li data="' + i + '"><a style="color: black">'+ i + '</a></li>');
+    }
+  }
+
+  $("ul.pagination li").click(function() {
+    var page = $(this).attr("data");
+    if(pageNo != page) location.href = current + "?pageNo=" + page;
+  });
+
+  $(".export").click(function () {
+    $.ajax({
+      url: "order_info/export",
+      type: "GET",
+      success: function (data) {
+        if (!!data) window.open(data);
+        else alert("export order info error " + data);
+      },
+      beforeSend: function () {
+        $(".export").attr("disabled", "true");
+      },
+      complete: function () {
+        $(".export").removeAttr("disabled");
+      }
+    })
+  });
+
+  $(".delete").click(function () {
+    $.ajax({
+      url: "order_info/delete",
+      type: "POST",
+      success: function (data) {
+        location.href = "order_info";
+      },
+      beforeSend: function () {
+        $(".delete").attr("disabled", "true");
+      },
+      complete: function () {
+        $(".delete").removeAttr("disabled");
+      }
+    })
+  });
+  /*]]>*/
+</script>
+</body>
+</html>
