@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@Controller
+//@Controller
 public class ChromePluginResultReceiver {
     private static final Logger logger = LoggerFactory.getLogger(ChromePluginResultReceiver.class);
     private static final int PAGE_SIZE = 25;
