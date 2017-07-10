@@ -38,7 +38,7 @@ public class AmazonParser {
     LogRepository logRepository;
     @Autowired
     JavaMailSenderImpl mailSender;
-    @Value("${logging.path}")
+    @Value("${cache.path}")
     String path;
 
     public Long parse(Entry entry, String ... args) {
@@ -123,6 +123,8 @@ public class AmazonParser {
         } finally {
             logger.info("result: {}", result.toString());
             if(result.validate()) {
+                new File(result.getCache()).delete();
+                result.setCache("");
                 logRepository.save(result);
                 return result.getId();
             } else {

@@ -32,6 +32,9 @@ logging.level.root: INFO
 logging.level.com.onlymaker: DEBUG
 logging.path: /tmp/logs
 
+# html cache
+cache.path: /tmp/caches
+
 # default mail sender
 spring.mail:
     host: smtp.exmail.qq.com
@@ -53,3 +56,4 @@ qiniu.bucket:
 spring.profiles: prod
 spring.mail.host: hwsmtp.exmail.qq.com
 logging.path: /usr/bin/app/logs
+cache.path: /usr/bin/app/caches
