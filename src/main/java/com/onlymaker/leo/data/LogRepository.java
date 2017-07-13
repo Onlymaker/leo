@@ -13,4 +13,5 @@ public interface LogRepository extends CrudRepository<Log, Long> {
     Log findFirstByEntryOrderByIdDesc(Entry entry);
     List<Log> findFirst2ByEntryOrderByIdDesc(Entry entry);
     Iterable<Log> findAllByEntryAndCreateTimeAfterOrderByIdDesc(Entry entry, Timestamp createTime);
+    Iterable<Log> findAllByEntry(Entry entry);
 }

@@ -1,39 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <title th:text="${title}">Title</title>
-  <link href="../static/bootstrap/bootstrap-3.3.7.min.css" th:href="@{/bootstrap/bootstrap-3.3.7.min.css}" rel="stylesheet"/>
-  <script src="../static/js/jquery-3.1.1.min.js" th:src="@{/js/jquery-3.1.1.min.js}"></script>
+    <meta charset="UTF-8"/>
+    <title th:text="${title}">Title</title>
+    <link href="../static/bootstrap/bootstrap-3.3.7.min.css" th:href="@{/bootstrap/bootstrap-3.3.7.min.css}" rel="stylesheet"/>
+    <script src="../static/js/jquery-3.1.1.min.js" th:src="@{/js/jquery-3.1.1.min.js}"></script>
 </head>
 <body>
 <div class="container">
-  <table class="table table-hover">
-    <tr class="active">
-      <td>最近30天记录</td><td>评论数</td><td>评分</td><td>排名</td><td>子类别排名</td><td>抓取时间</td>
-    </tr>
-    <tr th:each="entry: ${entries}" data-th-data="${entry.id}">
-      <td th:text="${entry.cache}">cacheId</td>
-      <td th:text="${entry.totalReview}">totalReview</td>
-      <td th:text="${entry.averageStar}">averageStar</td>
-      <td th:text="${entry.rank}">rank</td>
-      <td th:text="${entry.subRank}">subRank</td>
-      <td th:text="${#calendars.format(entry.createTime, 'yyyy-MM-dd HH:mm:ss')}">createTime</td>
-    </tr>
-  </table>
-  <div class="btn btn-group" th:if="${status != 0}">
-    <form method="post"><input type="hidden" th:value="${id}" /></form>
-    <div id="clear" class="btn btn-danger">清除标记</div>
-  </div>
+    <table class="table table-hover">
+        <tr class="active">
+            <td>最近30天记录</td>
+            <td>评论数</td>
+            <td>评分</td>
+            <td>排名</td>
+            <td>子类别排名</td>
+            <td>抓取时间</td>
+        </tr>
+        <tr th:each="entry: ${entries}" data-th-data="${entry.id}">
+            <td th:text="${entry.cache}">cacheId</td>
+            <td th:text="${entry.totalReview}">totalReview</td>
+            <td th:text="${entry.averageStar}">averageStar</td>
+            <td th:text="${entry.rank}">rank</td>
+            <td th:text="${entry.subRank}">subRank</td>
+            <td th:text="${#calendars.format(entry.createTime, 'yyyy-MM-dd HH:mm:ss')}">createTime</td>
+        </tr>
+    </table>
+    <div class="btn btn-group">
+        <div id="delete" class="btn btn-danger">删除</div>
+    </div>
 </div>
 <script src="../static/bootstrap/bootstrap-3.3.7.min.js" th:src="@{/bootstrap/bootstrap-3.3.7.min.js}"></script>
-<script>
-  /*<![CDATA[*/
-  var status = /*[[@{${status}}]]*/ 0;
-  $("#clear").click(function () {
-    $("form").submit();
-  })
-  /*]]>*/
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var url = /*[[@{/delete}]]*/ "delete";
+    var id = /*[[@{${id}}]]*/ 0;
+    $("#delete").click(function () {
+        if (confirm("Sure to delete?")) {
+            $.post(url, {id: id})
+                .done(function (data) {
+                    alert(data);
+                })
+                .fail(function (data) {
+                    alert(data);
+                })
+                .always(function () {
+                    window.close();
+                });
+        }
+    })
+    $(function () {
+        if ($("tr").length == 1) {
+            alert("Not found. Is it deleted already?");
+        }
+    })
+    /*]]>*/
 </script>
 </body>
 </html>

@@ -2,6 +2,7 @@ package com.onlymaker.leo.controller;
 
 import com.onlymaker.leo.data.Entry;
 import com.onlymaker.leo.data.EntryRepository;
+import com.onlymaker.leo.data.Log;
 import com.onlymaker.leo.data.LogRepository;
 import com.onlymaker.leo.util.AmazonStore;
 import com.onlymaker.leo.util.ExcelParser;
@@ -128,17 +129,46 @@ public class EntryController {
     public String detail(HttpServletRequest request, Model model) {
         Long id = Long.parseLong(request.getParameter("id"));
         Entry entry = entryRepository.findOne(id);
+        if (entry != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MONTH, -1);
+            model.addAttribute("title", "Detail");
+            model.addAttribute("id", id);
+            model.addAttribute("entries", logRepository.findAllByEntryAndCreateTimeAfterOrderByIdDesc(entry, new Timestamp(calendar.getTimeInMillis())));
+        }
+        return "detail";
+    }
+
+    @RequestMapping("/clear")
+    @ResponseBody
+    public String clear(HttpServletRequest request, Model model) {
+        Long id = Long.parseLong(request.getParameter("id"));
+        Entry entry = entryRepository.findOne(id);
         if(request.getMethod().toLowerCase().equals("post")) {
             entry.setStatus(0);
             entryRepository.save(entry);
+            return "success";
+        } else {
+            return "failure";
         }
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, -1);
-        model.addAttribute("title", "Detail");
-        model.addAttribute("id", id);
-        model.addAttribute("status", entry.getStatus());
-        model.addAttribute("entries", logRepository.findAllByEntryAndCreateTimeAfterOrderByIdDesc(entry, new Timestamp(calendar.getTimeInMillis())));
-        return "detail";
+    }
+
+    @RequestMapping("/delete")
+    @ResponseBody
+    public String delete(HttpServletRequest request, Model model) {
+        Long id = Long.parseLong(request.getParameter("id"));
+        if(request.getMethod().toLowerCase().equals("post")) {
+            Iterable<Log> logs = logRepository.findAllByEntry(entryRepository.findOne(id));
+            if (logs != null) {
+                logs.forEach(log -> {
+                    logRepository.delete(log);
+                });
+            }
+            entryRepository.delete(id);
+            return "success";
+        } else {
+            return "failure";
+        }
     }
 
     @RequestMapping("/create")
