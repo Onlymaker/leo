@@ -10,8 +10,12 @@ import java.util.Map;
 public class AmazonStore {
     public static final Map<String, String> STORES = new HashMap<String, String>() {{
         put("AODE", "https://www.amazon.de/dp/");
+        put("ASDE", "https://www.amazon.de/dp/");
+        put("AYDE", "https://www.amazon.de/dp/");
         put("AKEU", "https://www.amazon.de/dp/");
         put("AHUS", "https://www.amazon.com/dp/");
         put("ACUS", "https://www.amazon.com/dp/");
+        put("ASUS", "https://www.amazon.com/dp/");
+        put("AYUS", "https://www.amazon.com/dp/");
     }};
 }
